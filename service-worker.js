@@ -1,4 +1,4 @@
-const cacheName = "de-progress-v1";
+const cacheName = "de-progress-v2";
 const files = [
   "./",
   "./index.html",
