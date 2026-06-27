@@ -448,7 +448,7 @@ function openStatEditor(type) {
   statDateInput.value = dateInputValue(today);
   statValueInput.value = type === "payslip" ? String((latest?.value ?? 0) + 1) : "";
   statValueInput.step = type === "payslip" ? "1" : "0.01";
-  statDialog.showModal();
+  openModal(statDialog, statDateInput);
   haptic("light");
 }
 
@@ -460,12 +460,12 @@ function openTargetEditor() {
   statValueInput.step = "1";
   statDateField.hidden = true;
   statDateInput.required = false;
-  statDialog.showModal();
+  openModal(statDialog, statValueInput);
   haptic("light");
 }
 
 function closeStatEditor() {
-  statDialog.close();
+  closeModal(statDialog);
   statDateField.hidden = false;
   statDateInput.required = true;
 }
@@ -558,11 +558,23 @@ function openEditor(id = null) {
   collapsedInput.checked = module?.collapsed ?? false;
   selectedColor = module?.color ?? colors[0];
   renderColorChoices();
-  dialog.showModal();
+  openModal(dialog, titleInput);
 }
 
 function closeEditor() {
-  dialog.close();
+  closeModal(dialog);
+}
+
+function openModal(modal, focusTarget) {
+  modal.hidden = false;
+  requestAnimationFrame(() => {
+    focusTarget?.focus({ preventScroll: true });
+    focusTarget?.select?.();
+  });
+}
+
+function closeModal(modal) {
+  modal.hidden = true;
 }
 
 function saveCurrentModule(event) {
