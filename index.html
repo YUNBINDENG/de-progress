@@ -53,6 +53,69 @@
     </section>
 
     <section class="module-list" id="moduleList" aria-live="polite"></section>
+
+    <section class="task-stats" id="taskStats">
+      <button class="stats-head" id="statsToggle" type="button" aria-expanded="true">
+        <div>
+          <p class="eyebrow">Data Statistics</p>
+          <h2>任务统计</h2>
+        </div>
+        <span class="stats-chevron" aria-hidden="true">⌄</span>
+      </button>
+
+      <div class="stats-summary" id="statsSummary"></div>
+
+      <div class="stats-panel" id="statsPanel">
+        <article class="chart-card">
+          <div class="chart-head">
+            <div>
+              <h3>集签进度</h3>
+              <p>累计 payslip</p>
+              <button type="button" class="target-link" id="payslipTargetButton" data-stat-action="target" data-stat-type="payslip">目标 <span id="payslipTargetText">12</span></button>
+            </div>
+            <div class="chart-side">
+              <div class="chart-actions">
+                <button type="button" class="stat-action-button primary" data-stat-action="add" data-stat-type="payslip" aria-label="添加集签数据">+</button>
+                <button type="button" class="stat-action-button" data-stat-action="delete" data-stat-type="payslip" aria-label="删除最新集签数据">−</button>
+              </div>
+            </div>
+          </div>
+          <div class="line-chart" id="payslipChart" aria-label="集签进度折线图"></div>
+        </article>
+
+        <article class="chart-card">
+          <div class="chart-head">
+            <div>
+              <h3>税后薪资</h3>
+              <p>每周税后收入</p>
+            </div>
+            <div class="chart-side">
+              <div class="chart-actions">
+                <button type="button" class="stat-action-button primary" data-stat-action="add" data-stat-type="salary" aria-label="添加薪资数据">+</button>
+                <button type="button" class="stat-action-button" data-stat-action="delete" data-stat-type="salary" aria-label="删除最新薪资数据">−</button>
+              </div>
+            </div>
+          </div>
+          <div class="bar-chart" id="salaryChart" aria-label="每周税后薪资柱状图"></div>
+        </article>
+
+        <article class="chart-card">
+          <div class="chart-head">
+            <div>
+              <h3>每周工时</h3>
+              <p>每周总工时</p>
+            </div>
+            <div class="chart-side">
+              <div class="chart-actions">
+                <button type="button" class="stat-action-button primary" data-stat-action="add" data-stat-type="hours" aria-label="添加工时数据">+</button>
+                <button type="button" class="stat-action-button" data-stat-action="delete" data-stat-type="hours" aria-label="删除最新工时数据">−</button>
+              </div>
+            </div>
+          </div>
+          <div class="hours-chart" id="hoursChart" aria-label="每周工时柱状图"></div>
+        </article>
+      </div>
+    </section>
   </main>
 
   <dialog class="module-dialog" id="moduleDialog">
@@ -93,10 +156,41 @@
         <input id="pulseInput" name="pulse" type="checkbox">
       </label>
 
+      <label class="toggle-line">
+        <span>折叠显示</span>
+        <input id="collapsedInput" name="collapsed" type="checkbox">
+      </label>
+
       <menu class="dialog-actions">
         <button class="danger-button" type="button" id="deleteButton">删除</button>
         <span></span>
         <button class="secondary-button" type="button" id="cancelButton">取消</button>
+        <button class="primary-button" value="confirm" type="submit">保存</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog class="module-dialog" id="statDialog">
+    <form method="dialog" id="statForm">
+      <div class="dialog-head">
+        <h2 id="statDialogTitle">添加数据</h2>
+        <button class="plain-button" type="button" id="closeStatDialogButton" aria-label="关闭">×</button>
+      </div>
+
+      <label id="statDateField">
+        <span>日期</span>
+        <input id="statDateInput" name="date" type="date" required>
+      </label>
+
+      <label>
+        <span id="statValueLabel">数值</span>
+        <input id="statValueInput" name="value" type="number" step="0.01" min="0" required inputmode="decimal">
+      </label>
+
+      <menu class="dialog-actions">
+        <span></span>
+        <span></span>
+        <button class="secondary-button" type="button" id="cancelStatButton">取消</button>
         <button class="primary-button" value="confirm" type="submit">保存</button>
       </menu>
     </form>
