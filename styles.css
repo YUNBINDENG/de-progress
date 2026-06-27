@@ -8,6 +8,11 @@
   --line: rgba(255,255,255,.1);
   --muted: #8f9b91;
   --text: #f2f6f0;
+  --accent-ui: #78e38f;
+  --accent-soft: rgba(120, 227, 143, .22);
+  --sky-a: rgba(68, 146, 86, .22);
+  --sky-b: rgba(75, 105, 214, .14);
+  --grain: rgba(255,255,255,.055);
 }
 
 * { box-sizing: border-box; }
@@ -15,18 +20,184 @@
 body {
   margin: 0;
   min-height: 100svh;
+  position: relative;
+  overflow-x: hidden;
   background:
-    radial-gradient(circle at 50% -20%, rgba(68, 146, 86, .22), transparent 34rem),
+    radial-gradient(circle at 50% -20%, var(--sky-a), transparent 34rem),
+    radial-gradient(circle at 12% 88%, var(--sky-b), transparent 24rem),
     #050806;
+  transition: background 420ms ease;
 }
 
 button, input {
   font: inherit;
 }
 
+.ambient {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.ambient::before,
+.ambient::after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  opacity: .52;
+  transition: opacity 420ms ease, transform 420ms ease;
+}
+
+.ambient::before {
+  background-image:
+    radial-gradient(circle at 18% 22%, var(--grain) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 74% 34%, var(--grain) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 42% 74%, var(--grain) 0 1px, transparent 1.5px);
+  background-size: 54px 54px, 82px 82px, 118px 118px;
+  animation: drift 18s linear infinite;
+}
+
+.ambient::after {
+  background:
+    radial-gradient(circle at 52% 42%, transparent 0 9rem, rgba(255,255,255,.06) 9.2rem 9.35rem, transparent 9.6rem),
+    conic-gradient(from 130deg at 50% 45%, transparent, var(--accent-soft), transparent 38%, transparent);
+  filter: blur(1px);
+  animation: slowSpin 22s linear infinite;
+}
+
+.ambient span {
+  position: absolute;
+  width: 42vmin;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  opacity: .22;
+  background: var(--accent-soft);
+  filter: blur(32px);
+  animation: floatField 12s ease-in-out infinite alternate;
+}
+
+.ambient span:nth-child(1) { left: -12vmin; top: 9vmin; }
+.ambient span:nth-child(2) { right: -18vmin; top: 18vmin; animation-delay: -2s; }
+.ambient span:nth-child(3) { left: 18vmin; bottom: -22vmin; animation-delay: -5s; }
+.ambient span:nth-child(4) { right: 12vmin; bottom: 12vmin; animation-delay: -8s; }
+
+.theme-universe {
+  --panel: #0b101b;
+  --panel-strong: #11192a;
+  --muted: #9aa6c7;
+  --accent-ui: #8cb7ff;
+  --accent-soft: rgba(103, 142, 255, .28);
+  --sky-a: rgba(76, 111, 255, .28);
+  --sky-b: rgba(129, 88, 255, .18);
+  --grain: rgba(222,232,255,.12);
+}
+
+.theme-love {
+  --panel: #180d14;
+  --panel-strong: #24101b;
+  --muted: #d5a4ba;
+  --accent-ui: #ff7aa8;
+  --accent-soft: rgba(255, 108, 150, .25);
+  --sky-a: rgba(255, 100, 145, .26);
+  --sky-b: rgba(255, 190, 206, .16);
+  --grain: rgba(255,218,228,.12);
+}
+
+.theme-rainy {
+  --panel: #071216;
+  --panel-strong: #0d1d24;
+  --muted: #8eb6c0;
+  --accent-ui: #62d2ff;
+  --accent-soft: rgba(90, 184, 255, .23);
+  --sky-a: rgba(58, 137, 180, .24);
+  --sky-b: rgba(110, 190, 210, .12);
+  --grain: rgba(199,239,255,.1);
+}
+
+.theme-connect {
+  --panel: #081411;
+  --panel-strong: #0d211b;
+  --muted: #9bc8b7;
+  --accent-ui: #45d6bd;
+  --accent-soft: rgba(69, 214, 189, .24);
+  --sky-a: rgba(56, 214, 169, .22);
+  --sky-b: rgba(111, 229, 139, .14);
+  --grain: rgba(200,255,236,.11);
+}
+
+.theme-wormhole {
+  --panel: #120d19;
+  --panel-strong: #1f1430;
+  --muted: #b9a4d9;
+  --accent-ui: #b685ff;
+  --accent-soft: rgba(182, 133, 255, .28);
+  --sky-a: rgba(164, 90, 255, .26);
+  --sky-b: rgba(80, 160, 255, .14);
+  --grain: rgba(235,220,255,.12);
+}
+
+.theme-turbulence {
+  --panel: #15100a;
+  --panel-strong: #24180d;
+  --muted: #d0b288;
+  --accent-ui: #ffd166;
+  --accent-soft: rgba(255, 209, 102, .23);
+  --sky-a: rgba(255, 186, 73, .25);
+  --sky-b: rgba(255, 109, 109, .14);
+  --grain: rgba(255,235,190,.12);
+}
+
+.theme-rainy .ambient::before {
+  background-image: linear-gradient(115deg, transparent 0 42%, rgba(180,231,255,.18) 43% 46%, transparent 47%);
+  background-size: 18px 54px;
+  animation: rainFall .72s linear infinite;
+}
+
+.theme-rainy .ambient::after {
+  background:
+    linear-gradient(180deg, transparent, rgba(110, 190, 210, .1), transparent),
+    radial-gradient(circle at 50% 20%, rgba(120, 206, 255, .16), transparent 32rem);
+  animation: rainMist 5s ease-in-out infinite alternate;
+}
+
+.theme-love .ambient::after {
+  background:
+    radial-gradient(circle at 35% 35%, rgba(255,122,168,.2), transparent 8rem),
+    radial-gradient(circle at 62% 58%, rgba(255,196,214,.16), transparent 10rem);
+  animation: heartbeat 2.8s ease-in-out infinite;
+}
+
+.theme-connect .ambient::after {
+  background:
+    linear-gradient(120deg, transparent 0 47%, rgba(69,214,189,.18) 48% 49%, transparent 50%),
+    linear-gradient(30deg, transparent 0 52%, rgba(111,229,139,.14) 53% 54%, transparent 55%);
+  background-size: 120px 120px, 160px 160px;
+  animation: drift 14s linear infinite;
+}
+
+.theme-wormhole .ambient::after {
+  opacity: .62;
+  background:
+    repeating-radial-gradient(circle at 50% 45%, transparent 0 18px, rgba(182,133,255,.18) 20px 22px),
+    conic-gradient(from 0deg at 50% 45%, rgba(182,133,255,.25), transparent, rgba(90,170,255,.18), transparent);
+  animation: slowSpin 8s linear infinite;
+}
+
+.theme-turbulence .ambient::before {
+  background:
+    linear-gradient(120deg, transparent 0 20%, rgba(255,209,102,.12), transparent 42%),
+    linear-gradient(70deg, transparent 0 28%, rgba(255,109,109,.12), transparent 48%);
+  background-size: 180px 110px, 230px 140px;
+  animation: turbulence 5s ease-in-out infinite alternate;
+}
+
 .app-shell {
   width: min(100%, 520px);
   margin: 0 auto;
+  position: relative;
+  z-index: 1;
   padding: calc(env(safe-area-inset-top) + 18px) 16px calc(env(safe-area-inset-bottom) + 24px);
 }
 
@@ -57,11 +228,44 @@ h1 {
   width: 44px;
   height: 44px;
   border-radius: 22px;
-  border: 1px solid rgba(121,217,144,.35);
+  border: 1px solid color-mix(in srgb, var(--accent-ui) 45%, transparent);
   color: #081009;
-  background: #78e38f;
+  background: var(--accent-ui);
   font-size: 30px;
   line-height: 1;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.theme-picker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 0 8px 0 12px;
+  background: rgba(255,255,255,.07);
+  backdrop-filter: blur(16px);
+}
+
+.theme-picker span {
+  color: var(--accent-ui);
+  font-size: 17px;
+}
+
+.theme-picker select {
+  max-width: 118px;
+  border: 0;
+  color: var(--text);
+  background: transparent;
+  font-size: 13px;
+  appearance: none;
+  outline: 0;
 }
 
 .today-strip {
@@ -92,8 +296,8 @@ h1 {
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: #78e38f;
-  box-shadow: 0 0 18px rgba(120, 227, 143, .85);
+  background: var(--accent-ui);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--accent-ui) 85%, transparent);
   animation: breathe 1.4s ease-in-out infinite alternate;
 }
 
@@ -105,7 +309,10 @@ h1 {
 .progress-card {
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: linear-gradient(180deg, var(--panel-strong), var(--panel));
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--panel-strong) 86%, var(--accent-soft)), var(--panel)),
+    radial-gradient(circle at 90% 10%, var(--accent-soft), transparent 12rem);
+  backdrop-filter: blur(18px);
   overflow: hidden;
 }
 
@@ -367,8 +574,45 @@ fieldset {
   to { opacity: 1; transform: scale(1.22); }
 }
 
+@keyframes drift {
+  from { transform: translate3d(-2%, -1%, 0); }
+  to { transform: translate3d(2%, 3%, 0); }
+}
+
+@keyframes slowSpin {
+  from { transform: rotate(0deg) scale(1); }
+  to { transform: rotate(360deg) scale(1.04); }
+}
+
+@keyframes floatField {
+  from { transform: translate3d(0, 0, 0) scale(.92); }
+  to { transform: translate3d(7vmin, -4vmin, 0) scale(1.1); }
+}
+
+@keyframes rainFall {
+  from { transform: translate3d(0, -54px, 0); }
+  to { transform: translate3d(-18px, 54px, 0); }
+}
+
+@keyframes rainMist {
+  from { opacity: .35; transform: translateY(-1%); }
+  to { opacity: .62; transform: translateY(2%); }
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); opacity: .38; }
+  42% { transform: scale(1.06); opacity: .66; }
+  58% { transform: scale(.98); opacity: .5; }
+}
+
+@keyframes turbulence {
+  from { transform: translate3d(-3%, -2%, 0) skewX(-6deg); }
+  to { transform: translate3d(4%, 3%, 0) skewX(7deg); }
+}
+
 @media (max-width: 390px) {
   .app-shell { padding-left: 12px; padding-right: 12px; }
   .date-grid { grid-template-columns: 1fr; }
   .dot-grid { gap: 3px; }
+  .theme-picker select { max-width: 92px; }
 }
