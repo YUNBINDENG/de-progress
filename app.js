@@ -1,5 +1,7 @@
 const storeKey = "de-progress-modules-v1";
+const themeKey = "de-progress-theme-v1";
 const colors = ["#78e38f", "#b685ff", "#ff6d6d", "#5ab8ff", "#ffd166", "#45d6bd"];
+const themes = ["universe", "love", "rainy", "connect", "wormhole", "turbulence"];
 const today = new Date();
 
 const defaults = [
@@ -35,21 +37,30 @@ const endInput = document.querySelector("#endInput");
 const pulseInput = document.querySelector("#pulseInput");
 const deleteButton = document.querySelector("#deleteButton");
 const colorRow = document.querySelector("#colorRow");
+const themeSelect = document.querySelector("#themeSelect");
 
 let modules = loadModules();
 let editingId = null;
 let selectedColor = colors[0];
+let selectedTheme = loadTheme();
 
 document.querySelector("#todayText").textContent = new Intl.DateTimeFormat("zh-CN", {
   dateStyle: "full"
 }).format(today);
 
-document.querySelector("#addModuleButton").addEventListener("click", () => openEditor());
+document.querySelector("#addModuleButton").addEventListener("click", () => {
+  openEditor();
+});
 document.querySelector("#closeDialogButton").addEventListener("click", closeEditor);
 document.querySelector("#cancelButton").addEventListener("click", closeEditor);
 deleteButton.addEventListener("click", deleteCurrentModule);
 form.addEventListener("submit", saveCurrentModule);
+themeSelect.addEventListener("change", () => {
+  setTheme(themeSelect.value);
+  haptic("theme");
+});
 
+setTheme(selectedTheme, false);
 renderColorChoices();
 renderModules();
 registerServiceWorker();
@@ -65,6 +76,29 @@ function loadModules() {
 
 function persist() {
   localStorage.setItem(storeKey, JSON.stringify(modules));
+}
+
+function loadTheme() {
+  const saved = localStorage.getItem(themeKey);
+  return themes.includes(saved) ? saved : "universe";
+}
+
+function setTheme(theme, shouldSave = true) {
+  selectedTheme = themes.includes(theme) ? theme : "universe";
+  document.body.className = `theme-${selectedTheme}`;
+  themeSelect.value = selectedTheme;
+  if (shouldSave) localStorage.setItem(themeKey, selectedTheme);
+}
+
+function haptic(kind = "light") {
+  if (!("vibrate" in navigator)) return;
+  const patterns = {
+    light: 8,
+    save: [12, 24, 12],
+    delete: [24, 28, 36],
+    theme: [10, 16, 10]
+  };
+  navigator.vibrate(patterns[kind] ?? patterns.light);
 }
 
 function parseDate(value) {
@@ -138,6 +172,7 @@ function renderColorChoices() {
     button.setAttribute("aria-label", `选择颜色 ${color}`);
     button.addEventListener("click", () => {
       selectedColor = color;
+      haptic("light");
       renderColorChoices();
     });
     if (color === selectedColor) button.classList.add("active");
@@ -146,6 +181,7 @@ function renderColorChoices() {
 }
 
 function openEditor(id = null) {
+  haptic("light");
   editingId = id;
   const module = modules.find((item) => item.id === id);
   dialogTitle.textContent = module ? "编辑模块" : "添加模块";
@@ -189,6 +225,7 @@ function saveCurrentModule(event) {
     modules = [next, ...modules];
   }
   persist();
+  haptic("save");
   renderModules();
   closeEditor();
 }
@@ -197,6 +234,7 @@ function deleteCurrentModule() {
   if (!editingId) return;
   modules = modules.filter((item) => item.id !== editingId);
   persist();
+  haptic("delete");
   renderModules();
   closeEditor();
 }
