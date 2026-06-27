@@ -11,7 +11,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icons/icon.svg">
   <link rel="icon" href="icons/icon.svg">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=20260628-inputs">
 </head>
 <body class="theme-universe">
   <div class="ambient" aria-hidden="true">
@@ -118,8 +118,8 @@
     </section>
   </main>
 
-  <dialog class="module-dialog" id="moduleDialog">
-    <form method="dialog" id="moduleForm">
+  <div class="module-dialog" id="moduleDialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle" hidden>
+    <form id="moduleForm">
       <div class="dialog-head">
         <h2 id="dialogTitle">添加模块</h2>
         <button class="plain-button" type="button" id="closeDialogButton" aria-label="关闭">×</button>
@@ -168,10 +168,10 @@
         <button class="primary-button" value="confirm" type="submit">保存</button>
       </menu>
     </form>
-  </dialog>
+  </div>
 
-  <dialog class="module-dialog" id="statDialog">
-    <form method="dialog" id="statForm">
+  <div class="module-dialog" id="statDialog" role="dialog" aria-modal="true" aria-labelledby="statDialogTitle" hidden>
+    <form id="statForm">
       <div class="dialog-head">
         <h2 id="statDialogTitle">添加数据</h2>
         <button class="plain-button" type="button" id="closeStatDialogButton" aria-label="关闭">×</button>
@@ -194,7 +194,7 @@
         <button class="primary-button" value="confirm" type="submit">保存</button>
       </menu>
     </form>
-  </dialog>
+  </div>
 
   <template id="moduleTemplate">
     <article class="progress-card">
@@ -224,6 +224,6 @@
     </article>
   </template>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=20260628-inputs"></script>
 </body>
 </html>
