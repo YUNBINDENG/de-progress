@@ -12,9 +12,15 @@ const colors = [
 ];
 const themes = ["universe", "love", "rainy", "connect", "wormhole", "turbulence"];
 const today = new Date();
+const latestPayslipStats = {
+  payslip: { date: "2026-06-28", value: 12 },
+  salary: { date: "2026-06-28", value: 1081.55 },
+  hours: { date: "2026-06-28", value: 40.7999 }
+};
 const defaultTaskStats = {
   target: 12,
   payslip: [
+    { ...latestPayslipStats.payslip },
     { date: "2025-06-21", value: 11 },
     { date: "2025-06-14", value: 10 },
     { date: "2025-06-07", value: 9 },
@@ -28,6 +34,7 @@ const defaultTaskStats = {
     { date: "2025-03-08", value: 1 }
   ],
   salary: [
+    { ...latestPayslipStats.salary },
     { date: "2025-06-21", value: 1365.29 },
     { date: "2025-06-14", value: 1101.98 },
     { date: "2025-06-07", value: 1382.65 },
@@ -41,6 +48,7 @@ const defaultTaskStats = {
     { date: "2025-03-08", value: 550.2 }
   ],
   hours: [
+    { ...latestPayslipStats.hours },
     { date: "2025-06-21", value: 51.5 },
     { date: "2025-06-14", value: 41.583 },
     { date: "2025-06-07", value: 45.033 },
@@ -224,12 +232,12 @@ function persist() {
 function loadTaskStats() {
   try {
     const saved = JSON.parse(localStorage.getItem(statsKey));
-    return {
+    return migrateTaskStats({
       target: normalizeTarget(saved?.target),
       payslip: normalizeStatList(saved?.payslip, "payslip"),
       salary: normalizeStatList(saved?.salary, "salary"),
       hours: normalizeStatList(saved?.hours, "hours")
-    };
+    });
   } catch {
     return cloneDefaultStats();
   }
@@ -259,6 +267,36 @@ function normalizeStatList(list, type) {
     }))
     .filter((item) => item.date && Number.isFinite(item.value))
     .sort((a, b) => b.date.localeCompare(a.date));
+}
+
+function migrateTaskStats(stats) {
+  let changed = false;
+  const next = {
+    ...stats,
+    payslip: [...stats.payslip],
+    salary: [...stats.salary],
+    hours: [...stats.hours]
+  };
+
+  Object.entries(latestPayslipStats).forEach(([type, entry]) => {
+    const index = next[type].findIndex((item) => item.date === entry.date);
+    if (index === -1) {
+      next[type] = [entry, ...next[type]];
+      changed = true;
+      return;
+    }
+    if (next[type][index].value !== entry.value) {
+      next[type][index] = entry;
+      changed = true;
+    }
+  });
+
+  next.payslip = normalizeStatList(next.payslip, "payslip");
+  next.salary = normalizeStatList(next.salary, "salary");
+  next.hours = normalizeStatList(next.hours, "hours");
+
+  if (changed) localStorage.setItem(statsKey, JSON.stringify(next));
+  return next;
 }
 
 function persistTaskStats() {
